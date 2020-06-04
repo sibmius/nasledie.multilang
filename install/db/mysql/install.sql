@@ -1,0 +1,7 @@
+SET AUTOCOMMIT = 0;
+
+START TRANSACTION;
+
+SET time_zone = "+00:00";
+
+COMMIT;
