@@ -21,7 +21,7 @@ $MESS[$MODULE_CODE . '_property_MENU_LINK_DESCRIPTION'] = 'Переводы на
 $MESS[$MODULE_CODE . '_enum_MENU_LINK_NAME'] = 'Индексированые значения';
 $MESS[$MODULE_CODE . '_enum_MENU_LINK_DESCRIPTION'] = 'Перевод индексированых значений свойств елементов';
 
-$MESS[$MODULE_CODE . '_value_MENU_LINK_NAME'] = 'Значения елекментов';
+$MESS[$MODULE_CODE . '_value_MENU_LINK_NAME'] = 'Значения елементов';
 $MESS[$MODULE_CODE . '_value_MENU_LINK_DESCRIPTION'] = 'Перевод текстовых значений свойств елементов';
 
 $MESS[$MODULE_CODE . '_seo_MENU_LINK_NAME'] = 'СЕО';
