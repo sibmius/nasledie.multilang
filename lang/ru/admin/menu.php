@@ -26,3 +26,6 @@ $MESS[$MODULE_CODE . '_value_MENU_LINK_DESCRIPTION'] = 'Перевод текс�
 
 $MESS[$MODULE_CODE . '_seo_MENU_LINK_NAME'] = 'СЕО';
 $MESS[$MODULE_CODE . '_seo_MENU_LINK_DESCRIPTION'] = 'Перевод вычисленных значений сео полей';
+
+$MESS[$MODULE_CODE . '_pay_MENU_LINK_NAME'] = 'Платёжные системы';
+$MESS[$MODULE_CODE . '_pay_MENU_LINK_DESCRIPTION'] = 'Перевод значений полей платёжных систем';

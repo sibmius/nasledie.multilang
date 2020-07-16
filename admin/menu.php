@@ -25,13 +25,14 @@ if ($MOD_RIGHT > "D") {
 
 
 	$arFiles = array(
-		'iblock' => array('edit'),
-		'section' => array('edit'),
-		'element' => array('edit'),
-		'property' => array('edit'),
-		'enum' => array('edit'),
-		'value' => array('edit'),
-		'seo' => array('edit'),
+		'iblock' => array('edit','del'),
+		'section' => array('edit','del'),
+		'element' => array('edit','del'),
+		'property' => array('edit','del'),
+		'enum' => array('edit','del'),
+		'value' => array('edit','del'),
+		'seo' => array('edit','del'),
+		'pay' => array('edit','del'),
 	);
 
 

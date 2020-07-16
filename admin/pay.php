@@ -17,15 +17,15 @@ use \Bitrix\Main\Localization\Loc as Loc;
 
 Loc::loadMessages(__FILE__);
 
-$sTableID = "tbl_seo"; // ID таблицы
-$oSort = new CAdminSorting($sTableID, "ID", "asc"); // объект сортировки
+$sTableID = "tbl_pay"; // ID таблицы
+$oSort = new CAdminSorting($sTableID, "PAY_ID", "asc"); // объект сортировки
 $lAdmin = new CAdminList($sTableID, $oSort); // основной объект списка
 
 
 $FilterArr = Array(
 	"find_id",
-	"find_obtype",
-	"find_obid",
+	"find_pay",
+	"find_name",
 	"find_lang",
 );
 
@@ -33,14 +33,14 @@ $lAdmin->InitFilter($FilterArr);
 
 $arFilter = Array(
 	"ID" => $find_id,
-	"OBJECT_TYPE" => $find_obtype,
-	"OBJECT_ID" => $find_obid,
+	"PAY_ID" => $find_pay,
+	"NAME" => $find_name,
 	"LANG" => $find_lang,
 );
 
 global $DB;
 
-$sql = "SELECT * FROM `n_multilang_seo`";
+$sql = "SELECT * FROM `n_multilang_pay`";
 
 
 if ($set_filter == 'Y') {
@@ -77,34 +77,19 @@ $lAdmin->AddHeaders(array(
 		"sort" => "ID",
 		"default" => true,
 	),
-	array("id" => "OBJECT_TYPE",
-		"content" => GetMessage("TBL_OBJECT_TYPE"),
-		"sort" => "OBJECT_TYPE",
+	array("id" => "PAY_ID",
+		"content" => GetMessage("TBL_PAY"),
+		"sort" => "PAY_ID",
 		"default" => true,
 	),
-	array("id" => "OBJECT_ID",
-		"content" => GetMessage("TBL_OBJECT_ID"),
-		"sort" => "OBJECT_ID",
-		"default" => true,
-	),
-	array("id" => "TITLE",
-		"content" => GetMessage("TBL_TITLE"),
-		"sort" => "TITLE",
-		"default" => true,
-	),
-	array("id" => "KEY",
-		"content" => GetMessage("TBL_KEY"),
-		"sort" => "KEY",
+	array("id" => "NAME",
+		"content" => GetMessage("TBL_NAME"),
+		"sort" => "NAME",
 		"default" => true,
 	),
 	array("id" => "DESC",
 		"content" => GetMessage("TBL_DESC"),
-		"sort" => "DESC",
-		"default" => true,
-	),
-	array("id" => "H1",
-		"content" => GetMessage("TBL_H1"),
-		"sort" => "H1",
+		//"sort" => "DESC",
 		"default" => true,
 	),
 	array("id" => "LANG",
@@ -119,15 +104,12 @@ $arPropsList = array();
 while ($arRes = $rsData->NavNext(true, "f_")) {  // создаем строку. результат - экземпляр класса CAdminListRow
 	$row = & $lAdmin->AddRow($f_ID, $arRes);
 
-	$row->AddViewField("ID", '<a href="nasledie.multilang_seo_edit.php?ID=' . $f_ID . '&lang=' . LANG . '">' . $f_ID . '</a>');
+	$row->AddViewField("PAY_ID", '<a href="nasledie.multilang_pay_edit.php?PAY_ID=' . $f_PAY_ID . '&lang=' . LANG . '">' . $f_PAY_ID . '</a>');
 
 
-	$row->AddViewField("OBJECT_TYPE", GetMessage("TBL_OBJECT_TYPE_".$f_OBJECT_TYPE));
-	$row->AddViewField("OBJECT_ID", $f_OBJECT_ID);
-	$row->AddViewField("TITLE", $f_TITLE);
-	$row->AddViewField("KEY", $f_KEY);
-	$row->AddViewField("DESC", $f_DESC);
-	$row->AddViewField("H1", $f_H1);
+	$row->AddViewField("ID", $f_ID);
+	$row->AddViewField("NAME", $f_NAME);
+	$row->AddViewField("DESC", $f_DESCRIPTION);
 	$row->AddViewField("LANG", $f_LANG);
 
 	$arActions = Array();
@@ -136,13 +118,13 @@ while ($arRes = $rsData->NavNext(true, "f_")) {  // создаем строку.
 		"ICON" => "edit",
 		"DEFAULT" => true,
 		"TEXT" => GetMessage("IBLOCK_EDIT"),
-		"ACTION" => $lAdmin->ActionRedirect("nasledie.multilang_seo_edit.php?ID=" . $f_ID)
+		"ACTION" => $lAdmin->ActionRedirect("nasledie.multilang_pay_edit.php?PAY_ID=" . $f_PAY_ID)
 	);
 
 	$arActions[] = array(
 		"ICON" => "delete",
 		"TEXT" => GetMessage("IBLOCK_DEL"),
-		"ACTION" => "if(confirm('" . GetMessage('DEL_CONFIRM') . "')) " . $lAdmin->ActionRedirect("nasledie.multilang_seo_del.php?ID=" . $f_ID)
+		"ACTION" => "if(confirm('" . GetMessage('DEL_CONFIRM') . "')) " . $lAdmin->ActionRedirect("nasledie.multilang_pay_del.php?ID=" . $f_ID)
 	);
 
 	$row->AddActions($arActions);
@@ -157,7 +139,7 @@ $lAdmin->AddFooter(
 $aContext = array(
 	array(
 		"TEXT" => GetMessage("POST_ADD"),
-		"LINK" => "nasledie.multilang_seo_edit.php?lang=" . LANG,
+		"LINK" => "nasledie.multilang_pay_edit.php?lang=" . LANG,
 		"TITLE" => GetMessage("POST_ADD_TITLE"),
 		"ICON" => "btn_new",
 	),
@@ -178,8 +160,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_ad
 $oFilter = new CAdminFilter(
 	$sTableID . "_filter", array(
 	"ID",
-	GetMessage("TBL_OBJECT_TYPE"),
-	GetMessage("TBL_OBJECT_ID"),
+	GetMessage("TBL_PAY"),
+	GetMessage("TBL_NAME"),
 	GetMessage("TBL_LANG")
 	)
 );
@@ -194,14 +176,14 @@ $oFilter = new CAdminFilter(
 			$arr = array(
 				"reference" => array(
 					"ID",
-					GetMessage("TBL_OBJECT_TYPE"),
-					GetMessage("TBL_OBJECT_ID"),
-					GetMessage("TBL_LANG")
+					"PAY_ID",
+					GetMessage("TBL_NAME"),
+					GetMessage("TBL_LANG"),
 				),
 				"reference_id" => array(
 					"ID",
-					"OBJECT_TYPE",
-					"OBJECT_ID",
+					"PAY_ID",
+					"NAME",
 					"LANG",
 				)
 			);
@@ -217,32 +199,13 @@ $oFilter = new CAdminFilter(
 		</td>
 	</tr>
 	<tr>
-		<td><?= GetMessage("TBL_OBJECT_TYPE") ?>:</td>
-		<td>
-			<?
-			$arr = array(
-				"reference" => array(
-					GetMessage("TBL_OBJECT_TYPE_ALL"),
-					GetMessage("TBL_OBJECT_TYPE_I"),
-					GetMessage("TBL_OBJECT_TYPE_S"),
-					GetMessage("TBL_OBJECT_TYPE_E"),
-				),
-				"reference_id" => array(
-					"",
-					"I",
-					"S",
-					"E",
-				)
-			);
-			echo SelectBoxFromArray("find_obtype", $arr, $find_type, "", "");
-			?>
-		</td>
+		<td>PAY_ID:</td>
+		<td><input type="text" name="find_pay"  value="<? echo htmlspecialchars($find_pay) ?>"></td>
 	</tr>
+
 	<tr>
-		<td><?= GetMessage("TBL_OBJECT_ID") . ":" ?></td>
-		<td>
-			<input type="text" name="find_obid"  value="<? echo htmlspecialchars($find_obid) ?>">
-		</td>
+		<td><?= GetMessage("TBL_NAME") . ":" ?></td>
+		<td><input type="text" name="find_name"  value="<? echo htmlspecialchars($find_name) ?>"></td>
 	</tr>
 	<tr>
 		<td><?= GetMessage("TBL_LANG") . ":" ?></td>
@@ -260,4 +223,4 @@ $oFilter = new CAdminFilter(
 $lAdmin->DisplayList();
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/epilog_admin.php");
-
+?>

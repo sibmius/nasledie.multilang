@@ -145,7 +145,7 @@ class nasledie_multilang extends CModule {
 	 */
 	public function InstallAgents() {
 		$oAgent = new CAgent();
-		$oAgent->AddAgent('\Nasledie\MultiLang\NMLAgent::Calc();', $this->MODULE_ID, 'N', 86400);
+		//$oAgent->AddAgent('\Nasledie\MultiLang\NMLAgent::Calc();', $this->MODULE_ID, 'N', 86400);
 	}
 
 	/**
