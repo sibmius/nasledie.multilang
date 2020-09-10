@@ -34,7 +34,7 @@ $lAdmin->InitFilter($FilterArr);
 $arFilter = Array(
 	"ID" => $find_id,
 	"ORIG" => $find_value,
-	"NAME" => $find_translate,
+	"TRANSLATE" => $find_translate,
 	"LANG" => $find_lang,
 );
 
@@ -61,7 +61,7 @@ if ($set_filter == 'Y') {
 }
 
 if ($by != '' && $order != '') {
-	$sql .= " ORDER BY " . $by . " " . $order;
+	$sql .= " ORDER BY `" . $by . "` " . $order;
 }
 $rsData = $DB->Query($sql, false, __FILE__ . " > " . __LINE__);
 
@@ -94,7 +94,6 @@ $lAdmin->AddHeaders(array(
 	),
 ));
 
-$arPropsList = array();
 
 while ($arRes = $rsData->NavNext(true, "f_")) {  // создаем строку. результат - экземпляр класса CAdminListRow
 	$row = & $lAdmin->AddRow($f_ID, $arRes);

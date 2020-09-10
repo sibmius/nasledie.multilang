@@ -60,6 +60,7 @@ if (
 		if ($ENUM_XML_ID !='') {
 			// обработка данных формы
 			$arFields = array(
+				"PROPERTY_ID" => "'" . $DB->ForSql($PROPERTY_ID) . "'",
 				"ENUM_XML_ID" => "'" . $DB->ForSql($ENUM_XML_ID) . "'",
 				"VALUE" => "'" . $DB->ForSql($VALUE[$LANG]) . "'",
 				"LANG" => "'" . $DB->ForSql($LANG) . "'"
@@ -79,7 +80,7 @@ if (
 		// (в целях защиты от повторной отправки формы нажатием кнопки "Обновить" в браузере)
 		if ($apply != "") {
 			// если была нажата кнопка "Применить" - отправляем обратно на форму.
-			LocalRedirect("/bitrix/admin/nasledie.multilang_enum_edit.php?ENUM_XML_ID=" . $ENUM_XML_ID . "&mess=ok&lang=" . LANG . "&" . $tabControl->ActiveTabParam());
+			LocalRedirect("/bitrix/admin/nasledie.multilang_enum_edit.php?ENUM_XML_ID=" . $ENUM_XML_ID . "&PROPERTY_ID=".$PROPERTY_ID."&mess=ok&lang=" . LANG . "&" . $tabControl->ActiveTabParam());
 		} else {
 			// если была нажата кнопка "Сохранить" - отправляем к списку элементов.
 			LocalRedirect("/bitrix/admin/nasledie.multilang_enum.php?lang=" . LANG);
@@ -90,20 +91,28 @@ if (
 }
 
 $str_ID = false;
+$str_PROPERTY_ID = false;
 $str_ENUM_XML_ID = false;
 $str_VALUE = false;
 $str_LANG = false;
 
 if ($ENUM_XML_ID !='') {
 	$sql = "SELECT * FROM `n_multilang_enum` WHERE `ENUM_XML_ID`='" . $DB->ForSql($ENUM_XML_ID) . "'";
+	if($PROPERTY_ID>0){
+		$sql.=" AND `PROPERTY_ID`='".$DB->ForSql($PROPERTY_ID)."' ";
+	}
 	$rsData = $DB->Query($sql, false, __FILE__ . " > " . __LINE__);
 	while ($row = $rsData->Fetch()) {
 		$str_ID[$row['LANG']] = $row['ID'];
+		$str_PROPERTY_ID = $row['PROPERTY_ID'];
 		$str_ENUM_XML_ID[$row['LANG']] = $row['ENUM_XML_ID'];
 		$str_VALUE[$row['LANG']] = $row['VALUE'];
 		$str_LANG[$row['LANG']] = $row['LANG'];
 	}
 	$sql = "SELECT * FROM `b_iblock_property_enum` WHERE `XML_ID`='" . $DB->ForSql($ENUM_XML_ID) . "'";
+	if($PROPERTY_ID>0){
+		$sql.=" AND `PROPERTY_ID`='".$DB->ForSql($PROPERTY_ID)."' ";
+	}
 	$rsData = $DB->Query($sql, false, __FILE__ . " > " . __LINE__);
 	while ($row = $rsData->Fetch()) {
 		$arProps = $row;
@@ -155,6 +164,13 @@ CModule::IncludeModule("iblock");
 								<td>
 									<input type="text" name="ENUM_XML_ID" value="<? echo $ENUM_XML_ID; ?>" size="30" maxlength="100">
 									<input type="submit" name="apply" value="Загрузить" title="Сохранить и остаться в форме">
+								</td>
+							</tr>
+							<tr>
+								<td><span class="required">*</span>PROPERTY_ID</td>
+								<td>
+									<input type="text" name="PROPERTY_ID" value="<? echo $str_PROPERTY_ID; ?>" size="30" maxlength="100">
+									
 								</td>
 							</tr>
 						</table>

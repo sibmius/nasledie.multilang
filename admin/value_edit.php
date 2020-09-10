@@ -57,7 +57,6 @@ if (
 
 
 	foreach ($arLang as $LANG => $L) {
-		if ($ID > 0) {
 			// обработка данных формы
 			$arFields = array(
 				"ORIG" => "'" . $DB->ForSql($ORIG) . "'",
@@ -69,10 +68,9 @@ if (
 			if ($ID > 0) {
 				$DB->Update("n_multilang_value", $arFields, "WHERE ID='" . $ID . "'", $err_mess . __LINE__);
 			} else {
-				$DB->Insert("n_multilang_value", $arFields, $err_mess . __LINE__);
+				$ID=$DB->Insert("n_multilang_value", $arFields, $err_mess . __LINE__);
 			}
 			$DB->Commit();
-		}
 	}
 
 	if ($ID > 0) {

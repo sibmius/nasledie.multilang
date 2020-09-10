@@ -24,6 +24,7 @@ $lAdmin = new CAdminList($sTableID, $oSort); // основной объект с
 
 $FilterArr = Array(
 	"find_id",
+	"find_prop",
 	"find_enum",
 	"find_value",
 	"find_lang",
@@ -33,6 +34,7 @@ $lAdmin->InitFilter($FilterArr);
 
 $arFilter = Array(
 	"ID" => $find_id,
+	"PROPERTY_ID"=>$find_prop,
 	"ENUM_XML_ID" => $find_enum,
 	"VALUE" => $find_value,
 	"LANG" => $find_lang,
@@ -61,7 +63,7 @@ if ($set_filter == 'Y') {
 }
 
 if ($by != '' && $order != '') {
-	$sql .= " ORDER BY " . $by . " " . $order;
+	$sql .= " ORDER BY `" . $by . "` " . $order;
 }
 $rsData = $DB->Query($sql, false, __FILE__ . " > " . __LINE__);
 
@@ -75,6 +77,11 @@ $lAdmin->AddHeaders(array(
 	array("id" => "ID",
 		"content" => "ID",
 		"sort" => "ID",
+		"default" => true,
+	),
+	array("id" => "PROPERTY_ID",
+		"content" => "PROPERTY_ID",
+		"sort" => "PROPERTY_ID",
 		"default" => true,
 	),
 	array("id" => "ENUM_XML_ID",
@@ -99,10 +106,10 @@ $arPropsList = array();
 while ($arRes = $rsData->NavNext(true, "f_")) {  // создаем строку. результат - экземпляр класса CAdminListRow
 	$row = & $lAdmin->AddRow($f_ID, $arRes);
 
-	$row->AddViewField("ENUM_XML_ID", '<a href="nasledie.multilang_enum_edit.php?ENUM_XML_ID=' . $f_ENUM_XML_ID . '&lang=' . LANG . '">' . $f_ENUM_XML_ID . '</a>');
-
+	$row->AddViewField("ENUM_XML_ID", '<a href="nasledie.multilang_enum_edit.php?ENUM_XML_ID=' . $f_ENUM_XML_ID . '&lang=' . LANG . '&PROPERTY_ID='.$f_PROPERTY_ID.'">' . $f_ENUM_XML_ID . '</a>');
 
 	$row->AddViewField("ID", $f_ID);
+	$row->AddViewField("PROPERTY_ID", $f_PROPERTY_ID);
 	$row->AddViewField("VALUE", $f_VALUE);
 	$row->AddViewField("LANG", $f_LANG);
 

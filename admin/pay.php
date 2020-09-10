@@ -61,7 +61,7 @@ if ($set_filter == 'Y') {
 }
 
 if ($by != '' && $order != '') {
-	$sql .= " ORDER BY " . $by . " " . $order;
+	$sql .= " ORDER BY `" . $by . "` " . $order;
 }
 $rsData = $DB->Query($sql, false, __FILE__ . " > " . __LINE__);
 

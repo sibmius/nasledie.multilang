@@ -55,7 +55,7 @@ if (
 	global $DB;
 
 
-
+	$DESC = str_replace('"', "&quot;", $DESC);
 	foreach ($arLang as $LANG => $L) {
 		$arFields = array(
 			"OBJECT_TYPE" => "'" . $DB->ForSql($OBJECT_TYPE) . "'",
@@ -70,7 +70,7 @@ if (
 		if ($ID > 0) {
 			$DB->Update("n_multilang_seo", $arFields, "WHERE ID='" . $ID . "'", $err_mess . __LINE__);
 		} else {
-			$ID=$DB->Insert("n_multilang_seo", $arFields, $err_mess . __LINE__);
+			$ID = $DB->Insert("n_multilang_seo", $arFields, $err_mess . __LINE__);
 		}
 		$DB->Commit();
 	}
@@ -110,7 +110,7 @@ if ($ID > 0) {
 		$str_OBJECT_ID = $row['OBJECT_ID'];
 		$str_TITLE = $row['TITLE'];
 		$str_KEY = $row['KEY'];
-		$str_DESC = $row['DESC'];
+		$str_DESC = str_replace('"', "&quot;", $row['DESC']);
 		$str_H1 = $row['H1'];
 		$str_LANG = $row['LANG'];
 	}
@@ -132,7 +132,7 @@ if ($ID > 0) {
 			while ($row = $rsData->Fetch()) {
 				$arElement = $row;
 			}
-			$ipropValues = new \Bitrix\Iblock\InheritedProperty\ElementValues($arElement['IBLOCK_ID'],$str_OBJECT_ID);
+			$ipropValues = new \Bitrix\Iblock\InheritedProperty\ElementValues($arElement['IBLOCK_ID'], $str_OBJECT_ID);
 			$ipropValues = $ipropValues->getValues();
 		}
 	}
@@ -217,7 +217,7 @@ CModule::IncludeModule("iblock");
 		<td>
 			<? if ($ipropValues) { ?>
 				<textarea readonly style="width:100%;"><?= ($str_OBJECT_TYPE == 'E' ? $ipropValues['ELEMENT_META_TITLE'] : $ipropValues['SECTION_META_TITLE'] ) ?></textarea>
-			<? } ?>
+<? } ?>
 			<input type="text" name="TITLE" style="width:100%;" value="<? echo $str_TITLE; ?>">
 
 		</td>
@@ -228,7 +228,7 @@ CModule::IncludeModule("iblock");
 		<td>
 			<? if ($ipropValues) { ?>
 				<textarea readonly style="width:100%;"><?= ($str_OBJECT_TYPE == 'E' ? $ipropValues['ELEMENT_META_KEYWORDS'] : $ipropValues['SECTION_META_KEYWORDS'] ) ?></textarea>
-			<? } ?>
+<? } ?>
 			<input type="text" name="KEY" style="width:100%;" value="<? echo $str_KEY; ?>">
 
 		</td>
@@ -239,7 +239,7 @@ CModule::IncludeModule("iblock");
 		<td>
 			<? if ($ipropValues) { ?>
 				<textarea readonly style="width:100%;"><?= ($str_OBJECT_TYPE == 'E' ? $ipropValues['ELEMENT_META_DESCRIPTION'] : $ipropValues['SECTION_META_DESCRIPTION'] ) ?></textarea>
-			<? } ?>
+<? } ?>
 			<input type="text" name="DESC" style="width:100%;" value="<? echo $str_DESC; ?>">
 
 		</td>
@@ -250,7 +250,7 @@ CModule::IncludeModule("iblock");
 		<td>
 			<? if ($ipropValues) { ?>
 				<textarea readonly style="width:100%;"><?= ($str_OBJECT_TYPE == 'E' ? $ipropValues['ELEMENT_PAGE_TITLE'] : $ipropValues['SECTION_PAGE_TITLE'] ) ?></textarea>
-			<? } ?>
+<? } ?>
 			<input type="text" name="H1" style="width:100%;" value="<? echo $str_H1; ?>">
 
 		</td>

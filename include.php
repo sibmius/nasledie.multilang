@@ -15,7 +15,9 @@ class NMLAgent {
 			$sql = "SELECT * FROM `n_multilang_element` WHERE `ELEMENT_ID`='" . $DB->ForSql($arItem['ID']) . "' LIMIT 1;";
 			$res = $DB->Query($sql, false, __FILE__ . " > " . __LINE__);
 			if ($row = $res->Fetch()) {
-				$arItem['NAME'] = $row['NAME'];
+				if (trim($row['NAME']) != '') {
+					$arItem['NAME'] = $row['NAME'];
+				}
 				$arItem['PREVIEW_TEXT'] = $row['PREVIEW_TEXT'];
 				$arItem['PREVIEW_TEXT_TYPE'] = $row['PREVIEW_TEXT_TYPE'];
 				$arItem['DETAIL_TEXT'] = $row['DETAIL_TEXT'];
@@ -30,14 +32,14 @@ class NMLAgent {
 				if ($props['PROPERTY_TYPE'] == 'L') {
 					if ($props['MULTIPLE'] == 'Y') {
 						foreach ($props['VALUE_XML_ID'] as $n => $value_xml_id) {
-							$sql = "SELECT * FROM `n_multilang_enum` WHERE `ENUM_XML_ID`='" . $DB->ForSql($value_xml_id) . "' LIMIT 1;";
+							$sql = "SELECT * FROM `n_multilang_enum` WHERE `ENUM_XML_ID`='" . $DB->ForSql($value_xml_id) . "' AND `PROPERTY_ID`='".$props['ID']."' LIMIT 1;";
 							$res = $DB->Query($sql, false, __FILE__ . " > " . __LINE__);
 							if ($row = $res->Fetch()) {
 								$props['VALUE'][$n] = $row['VALUE'];
 							}
 						}
 					} else {
-						$sql = "SELECT * FROM `n_multilang_enum` WHERE `ENUM_XML_ID`='" . $DB->ForSql($props['VALUE_XML_ID']) . "' LIMIT 1;";
+						$sql = "SELECT * FROM `n_multilang_enum` WHERE `ENUM_XML_ID`='" . $DB->ForSql($props['VALUE_XML_ID']) . "' AND `PROPERTY_ID`='".$props['ID']."' LIMIT 1;";
 						$res = $DB->Query($sql, false, __FILE__ . " > " . __LINE__);
 						if ($row = $res->Fetch()) {
 							$props['VALUE'] = $row['VALUE'];
@@ -102,6 +104,16 @@ class NMLAgent {
 				}
 			}
 			$arItem['IPROPERTY_VALUES'] = static::TRSeo('E', $arItem['ID'], $arItem['IPROPERTY_VALUES']);
+
+			$sql = "SELECT * FROM `n_multilang_seo` WHERE `OBJECT_TYPE`='E' AND `OBJECT_ID`='" . $DB->ForSql($arItem['ID']) . "' AND `LANG`='ua' LIMIT 1;";
+			$res = $DB->Query($sql, false, __FILE__ . " > " . __LINE__);
+			if ($row = $res->Fetch()) {
+				$arItem['META_TAGS']['BROWSER_TITLE'] = $row['TITLE'];
+				$arItem['META_TAGS']['KEYWORDS'] = $row['KEY'];
+				$arItem['META_TAGS']['DESCRIPTION'] = $row['DESC'];
+				$arItem['META_TAGS']['ELEMENT_CHAIN'] = $row['H1'];
+				$arItem['META_TAGS']['TITLE'] = $row['H1'];
+			}
 		}
 
 		return $arItem;
@@ -203,15 +215,19 @@ class NMLAgent {
 					$arItem['NAME'] = $row['NAME'];
 				}
 				foreach ($arItem["VALUES"] as &$val) {
-					$sql = "SELECT * FROM `n_multilang_enum` WHERE `ENUM_XML_ID`='" . $DB->ForSql($val['URL_ID']) . "' LIMIT 1;";
+					$sql = "SELECT * FROM `n_multilang_enum` WHERE `ENUM_XML_ID`='" . $DB->ForSql($val['URL_ID']) . "' AND `PROPERTY_ID`='".$arItem['ID']."' LIMIT 1;";
 					$res = $DB->Query($sql, false, __FILE__ . " > " . __LINE__);
 					if ($row = $res->Fetch()) {
 						$val['VALUE'] = $row['VALUE'];
+						$val['UPPER'] = $row['VALUE'];
+						$val['LIST_VALUE'] = $row['VALUE'];
 					} else {
 						$sql = "SELECT * FROM `n_multilang_value` WHERE `ORIG`='" . $DB->ForSql($val['VALUE']) . "' LIMIT 1;";
 						$res = $DB->Query($sql, false, __FILE__ . " > " . __LINE__);
 						if ($row = $res->Fetch()) {
 							$val['VALUE'] = $row['TRANSLATE'];
+							$val['UPPER'] = $row['TRANSLATE'];
+							$val['LIST_VALUE'] = $row['TRANSLATE'];
 						}
 					}
 				}
@@ -219,6 +235,20 @@ class NMLAgent {
 		}
 		return $arItem;
 	}
+
+	public static function TRCompare(array &$arItem) {
+		if (LANGUAGE_ID == 'ua' && $arItem['ID'] > 0) {
+			global $DB;
+			$sql = "SELECT * FROM `n_multilang_props` WHERE `PROPERTY_ID`='" . $DB->ForSql($arItem['ID']) . "' LIMIT 1;";
+			$res = $DB->Query($sql, false, __FILE__ . " > " . __LINE__);
+			if ($row = $res->Fetch()) {
+				$arItem['NAME'] = $row['NAME'];
+			}
+		}
+		return $arItem;
+	}
+
+	
 
 }
 
